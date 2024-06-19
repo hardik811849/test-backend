@@ -16,14 +16,23 @@
       "type": "text"
     },
     "image": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
+    },
+    "SortDescription": {
+      "type": "text",
+      "required": true
+    },
+    "Description": {
+      "type": "richtext",
+      "required": true
     }
   }
 }

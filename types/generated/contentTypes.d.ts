@@ -802,6 +802,8 @@ export interface ApiBlogBlog extends Schema.CollectionType {
   attributes: {
     Title: Attribute.Text;
     image: Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    SortDescription: Attribute.Text & Attribute.Required;
+    Description: Attribute.RichText & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
