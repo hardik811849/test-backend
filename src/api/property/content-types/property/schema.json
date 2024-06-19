@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "properties",
+  "info": {
+    "singularName": "property",
+    "pluralName": "properties",
+    "displayName": "Property",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Image": {
+      "type": "string"
+    },
+    "Location": {
+      "type": "string"
+    },
+    "builtUpArea": {
+      "type": "string"
+    },
+    "listedby": {
+      "type": "string"
+    },
+    "assetType": {
+      "type": "string"
+    },
+    "properyType": {
+      "type": "string"
+    },
+    "TotalNoOfUnit": {
+      "type": "string"
+    },
+    "startingBid": {
+      "type": "string"
+    },
+    "lotSize": {
+      "type": "string"
+    },
+    "propertBuiltYear": {
+      "type": "string"
+    },
+    "interiorAccess": {
+      "type": "boolean"
+    },
+    "categories": {
+      "type": "enumeration",
+      "enum": [
+        "Apartment",
+        "Hotel",
+        "Commercial"
+      ]
+    }
+  }
+}
