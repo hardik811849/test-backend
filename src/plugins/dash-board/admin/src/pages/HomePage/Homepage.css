@@ -1,0 +1,123 @@
+/* Dashboard.css */
+.container {
+  padding: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
+}
+
+.input-group button {
+  margin-left: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f97316;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.input-group button img {
+  display: block;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.overview-item {
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+}
+
+.overview-item img {
+  margin-right: 1rem;
+}
+
+.overview-item p {
+  margin: 0;
+}
+
+.overview-item .label {
+  color: #f97316;
+  font-weight: 600;
+}
+
+.overview-item .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.quick-access {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+.quick-access button {
+  padding: 1rem;
+  border: 2px solid #f97316;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.quick-access button span {
+  font-size: 1rem;
+}
+
+.quick-access button img {
+  display: block;
+}
+
+/* Media queries for responsiveness */
+@media (min-width: 768px) {
+  .overview {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .quick-access {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+}
+.card:hover {
+  cursor: pointer;
+}
+.dropdown {
+  border: 1px solid red;
+}
