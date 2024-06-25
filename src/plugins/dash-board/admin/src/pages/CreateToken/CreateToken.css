@@ -1,0 +1,30 @@
+.parent {
+  padding: 50px;
+}
+.dropdown-parent {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.dropdown {
+  width: 10% !important;
+  padding: 10px;
+}
+.dropdown_value {
+  padding: 10px;
+  margin: 10px;
+}
+.create-token {
+  background-color: #271fe0;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.create-token:hover {
+  cursor: pointer;
+}
+.tabs:active {
+  color: #ff5800;
+}

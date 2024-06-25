@@ -118,6 +118,3 @@ h2 {
 .card:hover {
   cursor: pointer;
 }
-.dropdown {
-  border: 1px solid red;
-}
