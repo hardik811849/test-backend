@@ -13,7 +13,7 @@
 // } from "@strapi/design-system";
 import React, { useState } from "react";
 // import "./bridge.css";
-import { Box, Button, Input, Select, Text } from "@chakra-ui/react";
+import { Box, Button, Input, Select, Text, Textarea } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 const Bridge = () => {
@@ -174,6 +174,9 @@ const Bridge = () => {
               />
             </Box>
           </Box>
+
+          {/* Comments */}
+          <Textarea placeholder="Enter your Comments" mt={5} isRequired />
 
           {/* Button */}
           <Button

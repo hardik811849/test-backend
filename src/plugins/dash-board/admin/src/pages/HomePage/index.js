@@ -610,7 +610,7 @@ const HomePage = () => {
                 <Tr>
                   <Td>Proton</Td>
                   <Td>ETH</Td>
-                  <Td>2.1221 ETH</Td>
+                  <Td>2.1221 PRT</Td>
                   <Td>$109</Td>
                 </Tr>
               </Tbody>
@@ -642,7 +642,7 @@ const HomePage = () => {
                 <Tr>
                   <Td>Proton</Td>
                   <Td>ETH</Td>
-                  <Td>2.1221 ETH</Td>
+                  <Td>2.1221 PRT</Td>
                   <Td>$109</Td>
                 </Tr>
               </Tbody>
