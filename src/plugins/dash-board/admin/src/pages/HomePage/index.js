@@ -37,6 +37,17 @@ import { ethers } from "ethers";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 // import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
@@ -548,7 +559,96 @@ const HomePage = () => {
               </CardBody>
             </Card>
           </GridItem>
+          <GridItem col={4} s={12} padding={2}>
+            <Card
+              padding={2}
+              className="card"
+              onClick={() => history.push("/plugins/dash-board/bridge")}
+            >
+              <CardBody>
+                <Flex alignItems="center" gap={3}>
+                  <Icon
+                    as={Message}
+                    color="primary600"
+                    width="30px"
+                    height="30px"
+                  />
+                  <Flex direction="column" alignItems="flex-start">
+                    <CardTitle style={{ fontSize: "1.5rem" }}>Bridge</CardTitle>
+                  </Flex>
+                </Flex>
+              </CardBody>
+            </Card>
+          </GridItem>
         </Grid>
+
+        <Typography variant="beta" as="h2" paddingBottom={4}>
+          Assets
+        </Typography>
+
+        <Box display={"flex"} justifyContent={"space-between"} className="box">
+          <Text>Puffer Finance</Text>
+          <Text>$8,554</Text>
+        </Box>
+
+        <Box background={"#ffff"} className="table-box">
+          <Text bg={"#271fe0"} color={"white"} pl={6} pr={2} w={"fit-content"}>
+            Staked
+          </Text>
+
+          <TableContainer p={6}>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th></Th>
+                  <Th>Blockchain</Th>
+                  <Th>Balance</Th>
+                  <Th>USD Value</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>Proton</Td>
+                  <Td>ETH</Td>
+                  <Td>2.1221 ETH</Td>
+                  <Td>$109</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Box>
+
+        <Box display={"flex"} justifyContent={"space-between"} className="box">
+          <Text>Puffer Finance</Text>
+          <Text>$8,554</Text>
+        </Box>
+
+        <Box background={"#ffff"} className="table-box">
+          <Text bg={"#271fe0"} color={"white"} pl={6} pr={2} w={"fit-content"}>
+            Staked
+          </Text>
+
+          <TableContainer p={6}>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th></Th>
+                  <Th>Blockchain</Th>
+                  <Th>Balance</Th>
+                  <Th>USD Value</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>Proton</Td>
+                  <Td>ETH</Td>
+                  <Td>2.1221 ETH</Td>
+                  <Td>$109</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
     </>
   );

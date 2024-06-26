@@ -118,3 +118,14 @@ h2 {
 .card:hover {
   cursor: pointer;
 }
+.box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  font-weight: 500;
+  /* border: 1px solid red !important; */
+}
+.table-box {
+  padding-top: 10px;
+}
