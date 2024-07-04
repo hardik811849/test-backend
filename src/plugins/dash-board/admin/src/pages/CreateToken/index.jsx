@@ -20,10 +20,15 @@ import {
   Switch,
   Checkbox,
 } from "@strapi/design-system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CreateToken.css";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { ethers } from "ethers";
+import { contractDetails } from "../../blockchain/contractDetails";
+import authService from "../../blockchain/authService";
+import {
+  createTokenMeta,
+  getAccountDetails,
+} from "../../blockchain/commonFunction";
 
 const CreateToken = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -31,174 +36,69 @@ const CreateToken = () => {
   const [tokenSymbol, setTokenSymbol] = useState("");
   const [initialSupply, setInitialSupply] = useState("");
   const [maxSupply, setMaxSupply] = useState("");
-
+  const [address, setAddress] = useState();
   const [selectedBlockchain, setSelectedBlockchain] = useState("");
   const [canBurn, setCanBurn] = useState(false);
+  const [canMint, setCanMint] = useState(false);
+  const [canPause, setCanPause] = useState(false);
+  const [canBlacklist, setCanBlacklist] = useState(false);
+  const [canChargeTransaction, setCanChargeTransaction] = useState(false);
+  const [canApplyBurnFee, setCanApplyBurnFee] = useState(false);
+  const [canChangeOwner, setCanChangeOwner] = useState(false);
+  const [token, setToken] = useState([]);
+  const [submit, setSubmit] = useState(false);
+  const [config, setConfig] = useState({
+    canBurn: false,
+    canMint: false,
+    canPause: false,
+    canBlacklist: false,
+    changeTax: false,
+    applyBurnFee: false,
+    changeOwner: false,
+  });
 
-  const tokenFactory = "0x7c61A4d7e0d3f7fc802dBA1EA66D1Dd3Ac276857";
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // const signer = provider.getSigner();
 
-  const tokenAbi = [
-    {
-      constant: false,
-      inputs: [
-        {
-          name: "account",
-          type: "address",
-        },
-      ],
-      name: "removeOwner",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        {
-          name: "name",
-          type: "string",
-        },
-        {
-          name: "symbol",
-          type: "string",
-        },
-        {
-          name: "decimals",
-          type: "uint8",
-        },
-        {
-          name: "initialSupply",
-          type: "uint256",
-        },
-      ],
-      name: "createToken",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [
-        {
-          name: "account",
-          type: "address",
-        },
-      ],
-      name: "isOwner",
-      outputs: [
-        {
-          name: "",
-          type: "bool",
-        },
-      ],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        {
-          name: "account",
-          type: "address",
-        },
-      ],
-      name: "addOwner",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          name: "tokenAddress",
-          type: "address",
-        },
-        {
-          indexed: false,
-          name: "name",
-          type: "string",
-        },
-        {
-          indexed: false,
-          name: "symbol",
-          type: "string",
-        },
-        {
-          indexed: false,
-          name: "decimals",
-          type: "uint8",
-        },
-        {
-          indexed: false,
-          name: "initialSupply",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          name: "owner",
-          type: "address",
-        },
-      ],
-      name: "TokenCreated",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          name: "addedOwner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          name: "addedBy",
-          type: "address",
-        },
-      ],
-      name: "OwnerAdded",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          name: "removedOwner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          name: "removedBy",
-          type: "address",
-        },
-      ],
-      name: "OwnerRemoved",
-      type: "event",
-    },
-  ];
+  const createTokenAndDeploy = async (e) => {
+    e.preventDefault();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const usdaoContract = new ethers.Contract(tokenFactory, tokenAbi, signer);
+    if (!selectedBlockchain) {
+      return alert("Please select blockchain");
+    }
+    // if (!selectedTab) {
+    //   return alert("Please select token Supply");
+    // }
+    if (!tokenName) {
+      return alert("Please fill token Name");
+    }
+    if (!tokenSymbol) {
+      return alert("Please fill token symbol ");
+    }
 
-  const createTokenAndDeploy = async () => {
-    console.log("Creating token...");
+    if (token.length <= 0) {
+      return alert("Select Type of tokens");
+    }
+
+    if (!initialSupply) {
+      return alert("Please fill initial Supply");
+    }
+    if (!maxSupply) {
+      return alert("Please fill max Supply");
+    }
+
     try {
-      const tx = await usdaoContract.createToken(
-        tokenName,
-        tokenSymbol,
-        18,
-        initialSupply
-      );
-      await tx.wait();
-      console.log("Transaction mined:", tx);
+      let data = {
+        tokenName: tokenName,
+        symbol: tokenSymbol,
+        initialSupply: parseFloat(initialSupply),
+        maxSupply: parseFloat(maxSupply),
+        config: config,
+        owner: "address",
+      };
+      let tn = await authService.createToken(data);
+      console.log(tn.data);
+      let tokenCreation = await createTokenMeta(tn.data.abi, tn.data.bytecode);
       alert("Token created successfully!");
     } catch (error) {
       console.error("Error creating token", error);
@@ -206,13 +106,111 @@ const CreateToken = () => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      let add = await getAccountDetails();
+      // console.log("add--->", add);
+      setAddress(add);
+    })();
+  }, []);
+
+  useEffect(() => {
+    setSubmit(true);
+  }, [token]);
+
   const handleTabChange = (selectedIndex) => {
     setSelectedTab(selectedIndex);
   };
 
-  const handleToggle = () => {
-    setCanBurn(!canBurn); // Toggle the state
+  const handleToggle = (value, e) => {
+    setConfig({
+      ...config,
+      [e.target.name]: e.target.checked,
+    });
+    let { checked } = e.target;
+    if (value === "Can Burn") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        // setToken((pre) => [...pre, value]);
+        setCanBurn(!canBurn);
+      } else {
+        setCanBurn(!canBurn);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Can Mint") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanMint(!canMint);
+      } else {
+        setCanMint(!canMint);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Can Pause") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanPause(!canPause);
+      } else {
+        setCanPause(!canPause);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Can Blacklist") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanBlacklist(!canBlacklist);
+      } else {
+        setCanBlacklist(!canBlacklist);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Charge Transaction") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanChargeTransaction(!canChargeTransaction);
+      } else {
+        setCanChargeTransaction(!canChargeTransaction);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Apply Burn Fee") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanApplyBurnFee(!canApplyBurnFee);
+      } else {
+        setCanApplyBurnFee(!canApplyBurnFee);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
+    if (value === "Change Owner") {
+      if (checked) {
+        setToken((pre) => [...pre, value]);
+        setCanChangeOwner(!canChangeOwner);
+      } else {
+        setCanChangeOwner(!canChangeOwner);
+        setToken((pre) => {
+          return [...pre.filter((val) => val !== value)];
+        });
+      }
+    }
   };
+
+  // useEffect(() => {
+  //   console.log("----->", address);
+  // }, []);
 
   const handleBlockchainChange = async (e) => {
     const selectedValue = e;
@@ -280,6 +278,17 @@ const CreateToken = () => {
             </Option>
           </Select>
         </Box>
+        <Box marginTop={4}>
+          <Grid>
+            {token.map((item) => (
+              <GridItem col={3} padding={1}>
+                <Box className="TokenName">
+                  <FieldLabel>{item}</FieldLabel>
+                </Box>
+              </GridItem>
+            ))}
+          </Grid>
+        </Box>
         <Box marginTop={4} width="70%" bg="neutral100">
           <TabGroup selectedIndex={selectedTab} onTabChange={handleTabChange}>
             <Tabs>
@@ -290,7 +299,7 @@ const CreateToken = () => {
             <TabPanels>
               <TabPanel>
                 <Box marginTop={4}>
-                  <form onSubmit={createTokenAndDeploy}>
+                  <form onSubmit={(e) => createTokenAndDeploy(e)}>
                     <Grid gap={4}>
                       <GridItem col={6}>
                         <Field name="tokenName">
@@ -322,7 +331,8 @@ const CreateToken = () => {
                             <Flex gap={4}>
                               <Checkbox
                                 checked={canBurn}
-                                onChange={handleToggle}
+                                name="canBurn"
+                                onChange={(e) => handleToggle("Can Burn", e)}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Can Burn
@@ -332,8 +342,9 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canMint}
+                                name="canMint"
+                                onChange={(e) => handleToggle("Can Mint", e)}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Can Mint
@@ -343,8 +354,9 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canPause}
+                                name="canPause"
+                                onChange={(e) => handleToggle("Can Pause", e)}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Can Pause
@@ -354,8 +366,11 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canBlacklist}
+                                name={canBlacklist}
+                                onChange={(e) =>
+                                  handleToggle("Can Blacklist", e)
+                                }
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Can Blacklist
@@ -365,8 +380,11 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canChargeTransaction}
+                                name="changeTax"
+                                onChange={(e) =>
+                                  handleToggle("Charge Transaction", e)
+                                }
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Charge Transaction Tax / Fee
@@ -376,8 +394,11 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canApplyBurnFee}
+                                name="applyBurnFee"
+                                onChange={(e) =>
+                                  handleToggle("Apply Burn Fee", e)
+                                }
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Apply Burn Fee (Deflationary Token)
@@ -387,8 +408,11 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
-                                onChange={handleToggle}
+                                checked={canChangeOwner}
+                                name="changeOwner"
+                                onChange={(e) =>
+                                  handleToggle("Change Owner", e)
+                                }
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
                                 Change Owner
@@ -464,7 +488,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -475,7 +499,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -486,7 +510,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -497,7 +521,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -508,7 +532,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -519,7 +543,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -530,7 +554,7 @@ const CreateToken = () => {
                           <GridItem col={4}>
                             <Flex gap={4}>
                               <Checkbox
-                                checked={canBurn}
+                                // checked={canBurn}
                                 onChange={handleToggle}
                               />
                               <Typography fontWeight="bold" fontSize="2rem">
@@ -569,6 +593,7 @@ const CreateToken = () => {
                             className="create-token"
                             value="Create Token"
                             bg="primary600"
+                            disabled={submit}
                           />
                           <FieldHint />
                           <FieldError />
