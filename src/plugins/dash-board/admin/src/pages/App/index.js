@@ -14,6 +14,7 @@ import CreateToken from "../CreateToken";
 import { DesignSystemProvider, lightTheme } from "@strapi/design-system";
 import Bridge from "../Bridge";
 import { ChakraProvider } from "@chakra-ui/react";
+import ContractInteraction from "../ContractInteraction";
 
 const App = () => {
   return (
@@ -25,6 +26,11 @@ const App = () => {
             <Route
               path={`/plugins/${pluginId}/create-token`}
               component={CreateToken}
+              exact
+            />
+            <Route
+              path={`/plugins/${pluginId}/contract-interaction`}
+              component={ContractInteraction}
               exact
             />
             <Route

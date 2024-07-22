@@ -7,7 +7,7 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          "connect-src": ["'self'", "https:"],
+          "connect-src": ["'self'", "https:", "http://localhost:3001"],
           "img-src": [
             "'self'",
             "data:",
@@ -27,8 +27,13 @@ module.exports = [
       },
     },
   },
-
-  "strapi::cors",
+  {
+    name: "strapi::cors",
+    config: {
+      enabled: true,
+      origin: ["*"], // Allow all origins for simplicity, update for production
+    },
+  },
   "strapi::poweredBy",
   "strapi::query",
   "strapi::body",

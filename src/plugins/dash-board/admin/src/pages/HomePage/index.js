@@ -580,6 +580,31 @@ const HomePage = () => {
               </CardBody>
             </Card>
           </GridItem>
+          <GridItem col={4} s={12} padding={2}>
+            <Card
+              padding={2}
+              className="card"
+              onClick={() =>
+                history.push("/plugins/dash-board/contract-interaction")
+              }
+            >
+              <CardBody>
+                <Flex alignItems="center" gap={3}>
+                  <Icon
+                    as={Message}
+                    color="primary600"
+                    width="30px"
+                    height="30px"
+                  />
+                  <Flex direction="column" alignItems="flex-start">
+                    <CardTitle style={{ fontSize: "1.5rem" }}>
+                      Contract Interaction
+                    </CardTitle>
+                  </Flex>
+                </Flex>
+              </CardBody>
+            </Card>
+          </GridItem>
         </Grid>
 
         <Typography variant="beta" as="h2" paddingBottom={4}>
