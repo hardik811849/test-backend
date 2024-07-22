@@ -109,7 +109,6 @@ const CreateToken = () => {
   useEffect(() => {
     (async () => {
       let add = await getAccountDetails();
-      // console.log("add--->", add);
       setAddress(add);
     })();
   }, []);
